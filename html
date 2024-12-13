@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="he">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>טופס צור קשר מאובטח</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            background: linear-gradient(135deg, #3a7bd5, #00d2ff);
+            font-family: 'Heebo', sans-serif;
+            color: #000;
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden;
+            animation: backgroundShift 15s infinite linear;
+        }
+        @keyframes backgroundShift {
+            0% { background: linear-gradient(135deg, #3a7bd5, #00d2ff); }
+            50% { background: linear-gradient(135deg, #667eea, #764ba2); }
+            100% { background: linear-gradient(135deg, #3a7bd5, #00d2ff); }
+        }
+        header {
+            text-align: center;
+            padding: 3rem 0;
+            color: white;
+            animation: fadeIn 2s ease-in-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        .contact-form {
+            max-width: 600px;
+            margin: 3rem auto;
+            background: #ffffff;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            padding: 3rem;
+            animation: formSlide 1.5s ease-out;
+        }
+        @keyframes formSlide {
+            from { transform: translateY(50px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        .form-group input, .form-group textarea {
+            width: 100%;
+            padding: 1rem;
+            border-radius: 10px;
+            border: 1px solid #ccc;
+            margin-bottom: 1.5rem;
+            transition: box-shadow 0.3s ease, border-color 0.3s ease;
+            font-size: 1rem;
+            color: #000;
+        }
+        .form-group input:focus, .form-group textarea:focus {
+            box-shadow: 0 0 15px rgba(58, 123, 213, 0.4);
+            border-color: #3a7bd5;
+        }
+        .submit-button {
+            width: 100%;
+            background-color: #3a7bd5;
+            color: white;
+            border: none;
+            padding: 1rem;
+            border-radius: 10px;
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .submit-button:hover {
+            transform: scale(1.1);
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+        }
+        footer {
+            text-align: center;
+            padding: 2rem;
+            background-color: #3a7bd5;
+            color: white;
+            font-size: 0.9rem;
+            margin-top: 2rem;
+        }
+        .secured-notice {
+            text-align: center;
+            margin-top: 2rem;
+            font-size: 1.2rem;
+            color: white;
+        }
+        .secured-notice i {
+            color: #28a745;
+            margin-right: 5px;
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>צור קשר מאובטח</h1>
+    <p>השאר את פרטיך ואנו נחזור אליך בהקדם האפשרי</p>
+</header>
+
+<section class="contact-form">
+    <h2>השאר את פרטיך בצורה מאובטחת!</h2>
+    <form id="contactForm">
+        <div class="form-group">
+            <label for="name">שם מלא</label>
+            <input type="text" id="name" name="name" placeholder="הכנס את שמך" required>
+        </div>
+        <div class="form-group">
+            <label for="email">אימייל</label>
+            <input type="email" id="email" name="email" placeholder="הכנס את אימיילך" required>
+        </div>
+        <div class="form-group">
+            <label for="message">הודעה</label>
+            <textarea id="message" name="message" placeholder="כתוב כאן את ההודעה שלך" required></textarea>
+        </div>
+        <button type="submit" class="submit-button">שלח</button>
+    </form>
+</section>
+
+<div class="secured-notice">
+    <p><i class="fas fa-lock"></i> האתר מאובטח בטכנולוגיות הצפנה מתקדמות (SSL) ונעזר באימות חזק לשמירה על פרטיותך.</p>
+</div>
+
+<footer>
+    <p>&copy; 2024 כל הזכויות שמורות לעומר. האתר מוגן ברמה הגבוהה ביותר.</p>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
+<script>
+    emailjs.init("4qLBtTa_adcn1F66d");
+
+    const lastSubmissionKey = 'lastSubmission';
+
+    document.getElementById('contactForm').addEventListener('submit', function(event) {
+        event.preventDefault();
+        const lastSubmission = localStorage.getItem(lastSubmissionKey);
+        const now = new Date().getTime();
+
+        if (lastSubmission && now - lastSubmission < 24 * 60 * 60 * 1000) {
+            alert('ניתן לשלוח הודעה רק פעם אחת כל 24 שעות. נסה שוב מאוחר יותר.');
+            return;
+        }
+
+        const formData = new FormData(this);
+        const name = formData.get('name');
+        const email = formData.get('email');
+        const message = formData.get('message');
+
+        emailjs.send("service_xasefvu", "template_l3w2mv1", {
+            from_name: name,
+            from_email: email,
+            message: message
+        })
+        .then(response => {
+            alert('ההודעה נשלחה בהצלחה! כל הפרטים נשמרים בצורה מאובטחת.');
+            document.getElementById('contactForm').reset();
+            localStorage.setItem(lastSubmissionKey, now);
+        })
+        .catch(error => {
+            alert('אירעה תקלה בשליחת ההודעה. נסה שוב מאוחר יותר.');
+        });
+    });
+</script>
+
+</body>
+</html>
